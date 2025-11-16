@@ -11,7 +11,7 @@ export default function Tabs({ tabs }) {
             <button
                 key={tab}
                 onClick={() => setSelected(tab)}
-                className={`w-1/2 py-2 rounded-xl font-medium transition ${
+                className={`w-1/2 py-2 cursor-pointer rounded-xl font-medium transition ${
                 selected === tab ? "bg-white" : "opacity-60"
                 }`}
                 >

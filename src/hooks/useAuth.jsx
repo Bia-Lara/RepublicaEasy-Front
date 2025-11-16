@@ -33,8 +33,14 @@ export function AuthProvider({ children }) {
       setUser(returnedUser || { token });
       return { ok: true };
     } catch (err) {
-      const message =
-        err?.response?.data?.message || err.message || "Erro ao autenticar";
+      let message = "Não foi possível realizar o login. Verifique suas credenciais.";
+
+      if (err.response?.status === 403 || err.response?.status === 401) {
+        message = "Email ou senha inválidos.";
+      } else if (err.response?.data?.message) {
+        message = err.response.data.message;
+      }
+
       return { ok: false, message };
     }
 }
