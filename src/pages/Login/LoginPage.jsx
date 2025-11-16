@@ -19,7 +19,7 @@ export default function LoginPage() {
     setError("");
     const resp = await login({ email, password });
     if (resp.ok) {
-      navigate("/dashboard");
+      navigate("/Home");
     } else {
       setError(resp.message || "Credenciais inválidas");
     }

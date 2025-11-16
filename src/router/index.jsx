@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import LoginPage from "../pages/Login/LoginPage";
-import Dashboard from "../pages/Dashboard/Dashboard"; 
+import Home from "../pages/Home/Home"; 
 import ProtectedRoute from "../components/ProtectedRoute";
 
 export default function Router() {
@@ -8,10 +8,10 @@ export default function Router() {
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route
-        path="/dashboard"
+        path="/home"
         element={
           <ProtectedRoute>
-            <Dashboard />
+            <Home />
           </ProtectedRoute>
         }
       />

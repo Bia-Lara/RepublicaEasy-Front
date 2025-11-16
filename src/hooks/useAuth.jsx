@@ -19,8 +19,6 @@ export function AuthProvider({ children }) {
 
   async function login({ email, password }) {
     try {
-      console.log(email)
-      console.log(password)
       const resp = await api.post("/api/v1/auth/login", {
         email,
         password,
