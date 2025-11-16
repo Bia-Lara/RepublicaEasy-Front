@@ -17,29 +17,29 @@ export function AuthProvider({ children }) {
     setLoading(false);
   }, []);
 
-  async function login({ username, password }) {
+  async function login({ email, password }) {
     try {
-      const resp = await api.post("/login", {
-        username,
+      console.log(email)
+      console.log(password)
+      const resp = await api.post("/api/v1/auth/login", {
+        email,
         password,
       });
-     
+
       const { token, user: returnedUser } = resp.data;
       if (!token) throw new Error("token not returned from backend");
 
-      
       localStorage.setItem("token", token);
       if (returnedUser) localStorage.setItem("user", JSON.stringify(returnedUser));
       api.defaults.headers.common.Authorization = `Bearer ${token}`;
       setUser(returnedUser || { token });
       return { ok: true };
     } catch (err) {
-    
       const message =
         err?.response?.data?.message || err.message || "Erro ao autenticar";
       return { ok: false, message };
     }
-  }
+}
 
   function logout() {
     localStorage.removeItem("token");

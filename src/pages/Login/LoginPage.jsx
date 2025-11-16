@@ -7,16 +7,17 @@ import Tabs from "../../components/Tabs";
 import { useAuth } from "../../hooks/useAuth";
 
 export default function LoginPage() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    const resp = await login({ username, password });
+    const resp = await login({ email, password });
     if (resp.ok) {
       navigate("/dashboard");
     } else {
@@ -30,7 +31,7 @@ export default function LoginPage() {
         <img
           src={logo}
           alt="Mascote"
-          className="w-28 h-28 object-contain absolute -top-16 left-1/2 transform -translate-x-1/2"
+          className="w-48 h-48 object-contain absolute -top-20 left-1/2 transform -translate-x-1/2"
         />
 
         <h1 className="text-3xl font-bold text-green-700 mt-12">RepúblicaEasy</h1>
@@ -42,10 +43,10 @@ export default function LoginPage() {
           {error && <div className="text-sm text-red-600">{error}</div>}
 
           <Input
-            label="Usuário ou email"
+            label="Email"
             type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
 
           <Input
