@@ -50,7 +50,8 @@ export default function LoginPage() {
 
 
   return (
-    <div className="flex min-h-screen justify-center items-center bg-gray-100 p-4">
+    <div className="flex min-h-screen justify-center items-center bg-gradient-to-br from-green-400 via-yellow-300 to-green-200 p-4">
+
       <div className="bg-white shadow-xl w-full max-w-md rounded-2xl p-8 relative text-center">
         <img
           src={logo}
@@ -58,7 +59,12 @@ export default function LoginPage() {
           className="w-48 h-48 object-contain absolute -top-20 left-1/2 transform -translate-x-1/2"
         />
 
-        <h1 className="text-3xl font-bold text-green-700 mt-12">RepúblicaEasy</h1>
+        <h1
+          className="text-3xl mt-10 text-green-700"
+          style={{ fontFamily: "'BROSE', sans-serif" }}
+        >
+          RepúblicaEasy
+        </h1>
         <p className="text-gray-600 mt-2">Conecte-se com sua república</p>
 
         <Tabs tabs={["Login", "Cadastro"]} />
