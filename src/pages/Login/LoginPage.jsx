@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
 import Input from "../../components/Input";
+import PasswordInput from "../../components/PasswordInput";
 import Button from "../../components/Button";
 import Tabs from "../../components/Tabs";
 import { useAuth } from "../../hooks/useAuth";
@@ -17,6 +18,28 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    if (!email) {
+      setError("O campo email é obrigatório.");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Por favor, insira um email válido.");
+      return;
+    }
+
+    if (!password) {
+      setError("O campo senha é obrigatório.");
+      return;
+    }
+
+    if (password.length < 4) {
+      setError("A senha deve ter no mínimo 4 caracteres.");
+      return;
+    }
+
     const resp = await login({ email, password });
     if (resp.ok) {
       navigate("/Home");
@@ -24,6 +47,7 @@ export default function LoginPage() {
       setError(resp.message || "Credenciais inválidas");
     }
   };
+
 
   return (
     <div className="flex min-h-screen justify-center items-center bg-gray-100 p-4">
@@ -49,12 +73,12 @@ export default function LoginPage() {
             onChange={(e) => setEmail(e.target.value)}
           />
 
-          <Input
+          <PasswordInput
             label="Senha"
-            type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+
 
           <Button type="submit">Entrar</Button>
         </form>
