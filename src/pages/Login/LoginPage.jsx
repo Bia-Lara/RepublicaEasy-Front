@@ -1,4 +1,3 @@
-// src/pages/Login/LoginPage.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
