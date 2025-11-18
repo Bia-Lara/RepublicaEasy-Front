@@ -9,10 +9,12 @@ import {
 import logo from "../assets/images/logo.png";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
+import { useAuth } from "../hooks/useAuth";
 
 export default function Sidebar() {
   const location = useLocation();
   const [open, setOpen] = useState(false);
+  const { logout } = useAuth();
 
   const menu = [
     { label: "Página Inicial", icon: HomeIcon, to: "/home" },
@@ -113,17 +115,18 @@ export default function Sidebar() {
 
         <div className="pt-4 border-t border-white/40">
           <button
-            className="
-              w-full cursor-pointer flex items-center justify-center gap-3 
-              bg-red-600 text-white py-3 rounded-xl
-              font-semibold tracking-wide
-              hover:bg-red-700 transition-all duration-300
-              shadow-lg hover:shadow-red-300/40
-            "
-          >
-            <ArrowRightOnRectangleIcon className="w-6" />
-            Sair
-          </button>
+                onClick={logout}
+                className="
+                    w-full cursor-pointer flex items-center justify-center gap-3 
+                    bg-red-600 text-white py-3 rounded-xl
+                    font-semibold tracking-wide
+                    hover:bg-red-700 transition-all duration-300
+                    shadow-lg hover:shadow-red-300/40
+                "
+                >
+                <ArrowRightOnRectangleIcon className="w-6" />
+                Sair
+            </button>
         </div>
       </aside>
     </>

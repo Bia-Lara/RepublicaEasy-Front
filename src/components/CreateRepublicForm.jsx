@@ -5,18 +5,45 @@ export default function CreateRepublicForm() {
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
 
+  const [form, setForm] = useState({
+    nome: "",
+    cep: "",
+    rua: "",
+    bairro: "",
+    numero: "",
+    cidade: "",
+    estado: "",
+    descricao: "",
+  });
+
+  const handleChange = (field, value) => {
+    let v = value;
+
+    if (field === "cep") {
+      v = value.replace(/\D/g, "").slice(0, 8); 
+      if (v.length > 5) v = `${v.slice(0, 5)}-${v.slice(5)}`;
+    }
+
+    if (field === "numero") {
+      v = value.replace(/\D/g, "").slice(0, 6);
+    }
+
+    if (field === "estado") {
+      v = value.replace(/[^a-zA-Z]/g, "").slice(0, 2).toUpperCase();
+    }
+
+    setForm((prev) => ({ ...prev, [field]: v }));
+  };
+
   const handleImageSelect = (event) => {
     const file = event.target.files[0];
     if (!file) return;
-
     const reader = new FileReader();
     reader.onload = () => setImagePreview(reader.result);
     reader.readAsDataURL(file);
   };
 
-  const openFilePicker = () => {
-    fileInputRef.current.click();
-  };
+  const openFilePicker = () => fileInputRef.current.click();
 
   return (
     <div className="w-full flex flex-col items-center px-4">
@@ -33,9 +60,7 @@ export default function CreateRepublicForm() {
           Crie sua própria república e conecte-se com outros usuários
         </h3>
 
-        {/* FOTO */}
         <div className="flex flex-col items-center mb-8">
-          {/* INPUT OCULTO */}
           <input
             type="file"
             ref={fileInputRef}
@@ -44,7 +69,6 @@ export default function CreateRepublicForm() {
             onChange={handleImageSelect}
           />
 
-          {/* CÍRCULO CLICÁVEL */}
           <div
             onClick={openFilePicker}
             className="
@@ -74,13 +98,54 @@ export default function CreateRepublicForm() {
 
         {/* FORM */}
         <form className="flex flex-col gap-5">
-          <Input label="Nome da República" placeholder="Ex: República Sol Nascente" />
-          <Input label="CEP" placeholder="00000-000" />
-          <Input label="Rua" placeholder="Nome da rua" />
-          <Input label="Bairro" placeholder="Nome do bairro" />
-          <Input label="Número" placeholder="123" />
-          <Input label="Cidade" placeholder="Cidade" />
-          <Input label="Estado" placeholder="Estado" />
+          <Input
+            label="Nome da República"
+            placeholder="Ex: República Sol Nascente"
+            value={form.nome}
+            onChange={(e) => handleChange("nome", e.target.value)}
+          />
+
+          <Input
+            label="CEP"
+            placeholder="00000-000"
+            value={form.cep}
+            onChange={(e) => handleChange("cep", e.target.value)}
+          />
+
+          <Input
+            label="Rua"
+            placeholder="Nome da rua"
+            value={form.rua}
+            onChange={(e) => handleChange("rua", e.target.value)}
+          />
+
+          <Input
+            label="Bairro"
+            placeholder="Nome do bairro"
+            value={form.bairro}
+            onChange={(e) => handleChange("bairro", e.target.value)}
+          />
+
+          <Input
+            label="Número"
+            placeholder="123"
+            value={form.numero}
+            onChange={(e) => handleChange("numero", e.target.value)}
+          />
+
+          <Input
+            label="Cidade"
+            placeholder="Cidade"
+            value={form.cidade}
+            onChange={(e) => handleChange("cidade", e.target.value)}
+          />
+
+          <Input
+            label="Estado (UF)"
+            placeholder="SP"
+            value={form.estado}
+            onChange={(e) => handleChange("estado", e.target.value)}
+          />
 
           <div>
             <label className="block text-sm mb-1 font-medium text-gray-700">
@@ -93,6 +158,8 @@ export default function CreateRepublicForm() {
                 bg-transparent py-2
               "
               rows={3}
+              value={form.descricao}
+              onChange={(e) => handleChange("descricao", e.target.value)}
               placeholder="Fale um pouco sobre a república"
             ></textarea>
           </div>
