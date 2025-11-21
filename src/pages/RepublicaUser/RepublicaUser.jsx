@@ -1,9 +1,12 @@
 import Sidebar from "../../components/Sidebar";
+import CreateRepublicForm from "../../components/CreateRepublicForm";
 import RepublicList from "../../components/RepublicList";
 import { useAuth } from "../../hooks/useAuth";
 
-export default function Home() {
+export default function RepublicaUser() {
   const { user } = useAuth();
+  const hasRepublic = !!user?.republicId;
+
   return (
     <div className="min-h-screen flex bg-gray-100">
       <Sidebar />
@@ -14,9 +17,13 @@ export default function Home() {
           ml-72   /* Compensa a sidebar fixa */
         "
       >
-        <div className="w-full max-w-5xl">  
+        <div className="w-full max-w-5xl">
+          
+          {hasRepublic ? (
             <RepublicList user={user} />
-         
+          ) : (
+            <CreateRepublicForm />
+          )}
         </div>
       </main>
     </div>
