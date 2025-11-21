@@ -1,4 +1,5 @@
 import RepublicCard from "./RepublicCard";
+import { useNavigate } from "react-router-dom";
 
 export default function RepublicList({ user }) {
   const republicas = [
@@ -6,6 +7,8 @@ export default function RepublicList({ user }) {
     { id: 2, nome: "Rep Princess", imagem: "https://recreio.com.br/wp-content/uploads/disney/princesas.jpeg" },
     { id: 3, nome: "Rep. Caverna do Dragão", imagem: "https://aosugo.com/wp-content/uploads/2011/11/caverna20131.jpg" },
   ];
+
+  const navigate = useNavigate();
 
   return (
     <div className="w-full animate-fadeIn">
@@ -33,7 +36,7 @@ export default function RepublicList({ user }) {
               key={rep.id}
               nome={rep.nome}
               imagem={rep.imagem}
-              onClick={() => console.log("Abrir república:", rep.nome)}
+              onClick={() => navigate(`/republica/${rep.id}`)}
             />
           ))}
         </div>

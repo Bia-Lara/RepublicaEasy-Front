@@ -6,6 +6,7 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -20,12 +21,13 @@ export function AuthProvider({ children }) {
 
   async function login({ email, password }) {
     try {
-      const resp = await api.post("/api/v1/auth/login", {
+      const resp = await api.post(`${API_BASE}/api/v1/auth/login`, {
         email,
         password,
       });
 
-      // Alterei aqui porque o back retorna apenas o token
+      console.log("RESPOSTA: ", resp)
+      
       const token = resp.data.token;
       if (!token) throw new Error("Backend não retornou token");
 
@@ -33,7 +35,7 @@ export function AuthProvider({ children }) {
       localStorage.setItem("token", token);
       api.defaults.headers.common.Authorization = `Bearer ${token}`;
 
-      // backend nao  retorna o user 
+
       setUser({ token });
 
       return { ok: true };

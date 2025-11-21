@@ -18,6 +18,7 @@ export default function Home() {
         "
       >
         <div className="w-full max-w-5xl">
+          
           {hasRepublic ? (
             <RepublicList user={user} />
           ) : (

@@ -146,6 +146,13 @@ export default function CreateRepublicForm() {
             value={form.estado}
             onChange={(e) => handleChange("estado", e.target.value)}
           />
+          
+          <Input
+            label="Vagas"
+            placeholder="10"
+            value={form.vagas}
+            onChange={(e) => handleChange("vagas", e.target.value)}
+          />
 
           <div>
             <label className="block text-sm mb-1 font-medium text-gray-700">

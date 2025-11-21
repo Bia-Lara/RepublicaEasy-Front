@@ -5,6 +5,7 @@ import ProtectedRoute from "../components/ProtectedRoute";
 
 import RegisterUser from "../pages/RegisterUser/RegisterUser";
 import RegisterRepublica from "../pages/RegisterRepublica/RegisterRepublica";
+import RepublicDetail from "../pages/RepublicDetail/RepublicDetail";
 
 export default function Router() {
   return (
@@ -21,6 +22,14 @@ export default function Router() {
             <Home />
           </ProtectedRoute>
         }
+      />
+      <Route 
+        path="/republica/:id" 
+        element={
+          <ProtectedRoute>
+            <RepublicDetail />
+          </ProtectedRoute>
+        } 
       />
       <Route path="*" element={<LoginPage />} />
     </Routes>
