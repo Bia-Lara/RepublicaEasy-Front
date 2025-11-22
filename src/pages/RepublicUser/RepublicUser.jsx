@@ -1,6 +1,6 @@
 import Sidebar from "../../components/Sidebar";
 import CreateRepublicForm from "../../components/CreateRepublicForm";
-import RepublicList from "../../components/RepublicList";
+import RepublicDashboard from "../../components/RepublicDashboard";
 import { useAuth } from "../../hooks/useAuth";
 
 export default function RepublicaUser() {
@@ -18,9 +18,8 @@ export default function RepublicaUser() {
         "
       >
         <div className="w-full max-w-5xl">
-          
           {hasRepublic ? (
-            <RepublicList user={user} />
+           <RepublicDashboard/>
           ) : (
             <CreateRepublicForm />
           )}

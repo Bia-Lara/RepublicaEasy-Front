@@ -18,7 +18,7 @@ export default function Sidebar() {
 
   const menu = [
     { label: "Página Inicial", icon: HomeIcon, to: "/home" },
-    { label: "República", icon: BuildingStorefrontIcon, to: "/republica" },
+    { label: "República", icon: BuildingStorefrontIcon, to: "/republicaUser" },
     { label: "Perfil", icon: UserIcon, to: "/perfil" },
   ];
 

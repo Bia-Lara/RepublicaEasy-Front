@@ -1,10 +1,10 @@
 import { Routes, Route } from "react-router-dom";
 import LoginPage from "../pages/Login/LoginPage";
-import RepublicaUser from "../pages/RepublicaUser/RepublicaUser"; 
+import RepublicUser from "../pages/RepublicUser/RepublicUser"; 
 import ProtectedRoute from "../components/ProtectedRoute";
 
 import RegisterUser from "../pages/RegisterUser/RegisterUser";
-import RegisterRepublica from "../pages/RegisterRepublica/RegisterRepublica";
+import RegisterRepublic from "../pages/RegisterRepublic/RegisterRepublic";
 import RepublicDetail from "../pages/RepublicDetail/RepublicDetail";
 import Home from "../pages/Home/Home";
 
@@ -13,14 +13,14 @@ export default function Router() {
     <Routes>
 
     <Route path="/cadastro" element={<RegisterUser />} />
-      <Route path="/cadastro-republica" element={<RegisterRepublica />} />
+      <Route path="/cadastro-republica" element={<RegisterRepublic />} />
 
     <Route path="/login" element={<LoginPage />} />
       <Route
         path="/republicaUser"
         element={
           <ProtectedRoute>
-            <RepublicaUser />
+            <RepublicUser />
           </ProtectedRoute>
         }
       />
