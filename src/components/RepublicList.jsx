@@ -1,7 +1,10 @@
-import RepublicCard from "./RepublicCard";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import RepublicCard from "./RepublicCard";
 
 export default function RepublicList({ user }) {
+  const [search, setSearch] = useState("");
+
   const republicas = [
     { id: 1, nome: "Rep. Scooby-Doo", imagem: "https://i.pinimg.com/236x/21/7a/14/217a14fa40c8de56cc0552d6f757aaf3.jpg" },
     { id: 2, nome: "Rep Princess", imagem: "https://recreio.com.br/wp-content/uploads/disney/princesas.jpeg" },
@@ -9,6 +12,10 @@ export default function RepublicList({ user }) {
   ];
 
   const navigate = useNavigate();
+
+  const filteredRepublicas = republicas.filter((rep) =>
+    rep.nome.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <div className="w-full animate-fadeIn">
@@ -23,23 +30,35 @@ export default function RepublicList({ user }) {
           <input
             type="text"
             placeholder="Pesquisar repúblicas..."
-            className="w-full px-5 py-3 rounded-2xl bg-gray-100 border border-gray-300 focus:ring-4 focus:ring-indigo-300 focus:outline-none text-gray-700 placeholder-gray-500 transition-all"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="
+              w-full px-5 py-3 rounded-2xl bg-gray-100 
+              border border-gray-300 focus:ring-4 focus:ring-indigo-300 
+              focus:outline-none text-gray-700 placeholder-gray-500 transition-all
+            "
           />
           <span className="absolute right-5 top-3.5 text-gray-500 text-xl pointer-events-none">
             🔎
           </span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
-          {republicas.map((rep) => (
-            <RepublicCard
-              key={rep.id}
-              nome={rep.nome}
-              imagem={rep.imagem}
-              onClick={() => navigate(`/republica/${rep.id}`)}
-            />
-          ))}
-        </div>
+        {filteredRepublicas.length === 0 ? (
+          <p className="text-center text-gray-600 py-8">
+            Nenhuma república encontrada 😕
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
+            {filteredRepublicas.map((rep) => (
+              <RepublicCard
+                key={rep.id}
+                nome={rep.nome}
+                imagem={rep.imagem}
+                onClick={() => navigate(`/republica/${rep.id}`)}
+              />
+            ))}
+          </div>
+        )}
 
       </div>
     </div>
