@@ -2,8 +2,8 @@ import { useState } from "react";
 import TaskList from "./TaskList";
 import EditSection from "./EditSection";
 
-import TaskModalCreate from "./modals/TaskModalCreate";
-import TaskModalEdit from "./modals/TaskModalEdit";
+import TaskModalCreate from "./Modals/TaskModalCreate";
+import TaskModalEdit from "./Modals/TaskModalEdit";
 
 export default function RepublicDashboard() {
   const [openEdit, setOpenEdit] = useState(true);

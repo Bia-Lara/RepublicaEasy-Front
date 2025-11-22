@@ -1,9 +1,10 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import Input from "./Input";
+import PhotoModal from "./Modals/PhotoModal"; 
 
 export default function CreateRepublicForm() {
   const [imagePreview, setImagePreview] = useState(null);
-  const fileInputRef = useRef(null);
+  const [openPhotoModal, setOpenPhotoModal] = useState(false);
 
   const [form, setForm] = useState({
     nome: "",
@@ -13,6 +14,7 @@ export default function CreateRepublicForm() {
     numero: "",
     cidade: "",
     estado: "",
+    vagas: "",
     descricao: "",
   });
 
@@ -20,7 +22,7 @@ export default function CreateRepublicForm() {
     let v = value;
 
     if (field === "cep") {
-      v = value.replace(/\D/g, "").slice(0, 8); 
+      v = value.replace(/\D/g, "").slice(0, 8);
       if (v.length > 5) v = `${v.slice(0, 5)}-${v.slice(5)}`;
     }
 
@@ -35,42 +37,27 @@ export default function CreateRepublicForm() {
     setForm((prev) => ({ ...prev, [field]: v }));
   };
 
-  const handleImageSelect = (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => setImagePreview(reader.result);
-    reader.readAsDataURL(file);
-  };
-
-  const openFilePicker = () => fileInputRef.current.click();
-
   return (
     <div className="w-full flex flex-col items-center px-4">
       <h2 className="text-3xl font-bold text-center text-green-700 mb-8">
         Você não pertence a uma república
       </h2>
 
-      <div className="
-        bg-white/60 backdrop-blur-xl
-        w-full max-w-xl p-10 rounded-3xl shadow-xl 
-        border border-white/40
-      ">
+      <div
+        className="
+          bg-white/60 backdrop-blur-xl
+          w-full max-w-xl p-10 rounded-3xl shadow-xl 
+          border border-white/40
+        "
+      >
         <h3 className="text-center text-xl font-semibold text-green-700 mb-8">
           Crie sua própria república e conecte-se com outros usuários
         </h3>
 
+        {/* FOTO */}
         <div className="flex flex-col items-center mb-8">
-          <input
-            type="file"
-            ref={fileInputRef}
-            accept="image/*"
-            className="hidden"
-            onChange={handleImageSelect}
-          />
-
           <div
-            onClick={openFilePicker}
+            onClick={() => setOpenPhotoModal(true)}
             className="
               w-32 h-32 rounded-full 
               bg-gradient-to-br from-green-200 to-emerald-100
@@ -95,6 +82,13 @@ export default function CreateRepublicForm() {
             )}
           </div>
         </div>
+
+        {/* MODAL PARA INSERIR URL */}
+        <PhotoModal
+          open={openPhotoModal}
+          onClose={() => setOpenPhotoModal(false)}
+          onSave={(url) => setImagePreview(url)}
+        />
 
         {/* FORM */}
         <form className="flex flex-col gap-5">
@@ -146,7 +140,7 @@ export default function CreateRepublicForm() {
             value={form.estado}
             onChange={(e) => handleChange("estado", e.target.value)}
           />
-          
+
           <Input
             label="Vagas"
             placeholder="10"
@@ -171,14 +165,14 @@ export default function CreateRepublicForm() {
             ></textarea>
           </div>
 
-          <button className="
-            bg-gradient-to-r from-green-600 to-emerald-500
-            text-white font-semibold py-3 rounded-xl
-            mt-6 
-            shadow-md hover:shadow-lg 
-            hover:brightness-110 
-            transition-all duration-300
-          ">
+          <button
+            className="
+              bg-gradient-to-r from-green-600 to-emerald-500
+              text-white font-semibold py-3 rounded-xl
+              mt-6 shadow-md hover:shadow-lg 
+              hover:brightness-110 transition-all duration-300
+            "
+          >
             Cadastrar República
           </button>
         </form>

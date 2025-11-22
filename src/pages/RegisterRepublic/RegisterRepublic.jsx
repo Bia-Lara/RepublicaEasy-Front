@@ -5,7 +5,7 @@ import Button from "../../components/Button";
 import Tabs from "../../components/Tabs";
 import logo from "../../assets/images/logo.png";
 
-export default function RegisterRepublica() {
+export default function RegisterRepublic() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [localization, setLocalization] = useState("");

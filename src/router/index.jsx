@@ -6,6 +6,7 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import RegisterUser from "../pages/RegisterUser/RegisterUser";
 import RegisterRepublic from "../pages/RegisterRepublic/RegisterRepublic";
 import RepublicDetail from "../pages/RepublicDetail/RepublicDetail";
+import ProfilePage from "../pages/Profile/ProfilePage";
 import Home from "../pages/Home/Home";
 
 export default function Router() {
@@ -37,6 +38,14 @@ export default function Router() {
         element={
           <ProtectedRoute>
             <RepublicDetail />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/perfil" 
+        element={
+          <ProtectedRoute>
+            <ProfilePage />
           </ProtectedRoute>
         } 
       />
