@@ -10,10 +10,13 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    const savedUser = localStorage.getItem("user");
 
     if (token) {
       api.defaults.headers.common.Authorization = `Bearer ${token}`;
-      setUser({ token }); // não existe user no backend
+      if (savedUser) {
+        setUser(JSON.parse(savedUser));
+      }
     }
 
     setLoading(false);
@@ -26,28 +29,27 @@ export function AuthProvider({ children }) {
         password,
       });
 
-      console.log("RESPOSTA: ", resp)
-      
       const token = resp.data.token;
+      const user = resp.data.user;
+
       if (!token) throw new Error("Backend não retornou token");
 
-      
       localStorage.setItem("token", token);
       api.defaults.headers.common.Authorization = `Bearer ${token}`;
 
+      if (user) {
+        localStorage.setItem("user", JSON.stringify(user));
+      }
 
-      setUser({ token });
+      setUser(user);
 
       return { ok: true };
     } catch (err) {
-      let message =
-        "Não foi possível realizar o login. Verifique suas credenciais.";
+      let message = "Não foi possível realizar o login.";
+      console.log(err);
 
-      if (err.response?.status === 403 || err.response?.status === 401) {
+      if (err.response?.status === 401 || err.response?.status === 403)
         message = "Email ou senha inválidos.";
-      } else if (err.response?.data?.message) {
-        message = err.response.data.message;
-      }
 
       return { ok: false, message };
     }
