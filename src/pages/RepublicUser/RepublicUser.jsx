@@ -5,7 +5,7 @@ import { useAuth } from "../../hooks/useAuth";
 
 export default function RepublicaUser() {
   const { user } = useAuth();
-  const hasRepublic = !!user?.republicId;
+  const hasRepublic = !!user?.republicaId;
 
   return (
     <div className="min-h-screen flex bg-gray-100">
@@ -18,6 +18,7 @@ export default function RepublicaUser() {
         "
       >
         <div className="w-full max-w-5xl">
+         
           {hasRepublic ? (
            <RepublicDashboard/>
           ) : (

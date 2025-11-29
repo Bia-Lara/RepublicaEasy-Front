@@ -1,10 +1,15 @@
 import { useState } from "react";
 import Input from "./Input";
 import PhotoModal from "./Modals/PhotoModal"; 
+import { post } from "../services/ApiCLient";
+import { useAuth } from "../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateRepublicForm() {
   const [imagePreview, setImagePreview] = useState(null);
   const [openPhotoModal, setOpenPhotoModal] = useState(false);
+  const { user, updateUser } = useAuth();
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     nome: "",
@@ -36,6 +41,43 @@ export default function CreateRepublicForm() {
 
     setForm((prev) => ({ ...prev, [field]: v }));
   };
+
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    try {
+      const body = {
+        name: form.nome,
+        description: form.descricao,
+        localization: `${form.rua}, ${form.numero}, ${form.bairro}, ${form.cidade} - ${form.estado}, CEP ${form.cep}`,
+        imageUrl: imagePreview,
+        limitSpot: Number(form.vagas),
+        contact: user.email
+      };
+
+      const resp = await post("/republica", body);
+      const republicaCriada = resp.data.data;
+
+      await post("/republica/addUser", {
+        email: user.email,
+        republicaId: republicaCriada.id
+      });
+
+      updateUser({
+        ...user,
+        republicaId: republicaCriada.id
+      });
+
+      navigate("/republica-user");
+
+      alert("República criada com sucesso!");
+
+    } catch (err) {
+      console.error("Erro ao criar república:", err);
+      alert("Erro ao criar república");
+    }
+  }
 
   return (
     <div className="w-full flex flex-col items-center px-4">
@@ -166,13 +208,14 @@ export default function CreateRepublicForm() {
           </div>
 
           <button
-            className="
-              bg-gradient-to-r from-green-600 to-emerald-500
-              text-white font-semibold py-3 rounded-xl
-              mt-6 shadow-md hover:shadow-lg 
-              hover:brightness-110 transition-all duration-300
-            "
-          >
+              onClick={handleSubmit}
+              className="
+                bg-gradient-to-r from-green-600 to-emerald-500
+                text-white font-semibold py-3 rounded-xl
+                mt-6 shadow-md hover:shadow-lg 
+                hover:brightness-110 transition-all duration-300
+              "
+            >
             Cadastrar República
           </button>
         </form>

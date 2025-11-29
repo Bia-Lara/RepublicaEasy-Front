@@ -1,7 +1,33 @@
 import { PencilIcon, XMarkIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import InputEditable from "./InputEditable";
+import { useState } from "react";
 
-export default function EditSection({ open, setOpen, membros }) {
+export default function EditSection({
+  open,
+  setOpen,
+  republica,
+  membros,
+  onSave,
+  onChangePhoto,
+  setOpenAddMember
+}) {
+
+  const [form, setForm] = useState({
+    name: republica.name,
+    description: republica.description,
+    localization: republica.localization,
+    contact: republica.contact,
+    limitSpot: republica.limitSpot
+  });
+
+  const handleInput = (field, value) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = () => {
+    onSave(form); 
+  };
+
   return (
     <section
       className="
@@ -9,7 +35,7 @@ export default function EditSection({ open, setOpen, membros }) {
         border border-white/40 rounded-3xl shadow-xl p-8
       "
     >
-      {/* Header */}
+
       <div
         onClick={() => setOpen(!open)}
         className="flex justify-between items-center cursor-pointer"
@@ -24,29 +50,45 @@ export default function EditSection({ open, setOpen, membros }) {
 
       {open && (
         <div>
-          {/* Foto + Nome */}
+         
           <div className="flex items-center gap-5 mt-6">
             <img
-              src="https://i.pinimg.com/736x/72/1e/ea/721eea3fa04c4e5d88cdb22c47248289.jpg"
+              src={republica.imageUrl || "https://via.placeholder.com/150"}
               alt="Foto"
-              className="w-24 h-24 rounded-full object-cover shadow-md"
+              className="w-24 h-24 rounded-full object-cover shadow-md cursor-pointer"
+              onClick={onChangePhoto}
             />
 
             <div className="flex items-center gap-3 text-xl font-semibold text-gray-800">
-              Dauhma
+              {republica.name}
               <PencilIcon className="w-5 text-gray-700 cursor-pointer" />
             </div>
           </div>
 
-          {/* Inputs editáveis */}
+         
           <div className="mt-8 flex flex-col gap-4">
-            <InputEditable value="Rua 123" />
-            <InputEditable value="Descrição da república" />
-            <InputEditable value="1 vez por mês" />
-            <InputEditable value="email@email.com" />
+            <InputEditable
+              value={form.localization}
+              onChange={(v) => handleInput("localization", v)}
+            />
+
+            <InputEditable
+              value={form.description}
+              onChange={(v) => handleInput("description", v)}
+            />
+
+            <InputEditable
+              value={form.limitSpot}
+              onChange={(v) => handleInput("limitSpot", v)}
+            />
+
+            <InputEditable
+              value={form.contact}
+              onChange={(v) => handleInput("contact", v)}
+            />
           </div>
 
-          {/* Membros */}
+        
           <h3 className="text-xl font-bold text-gray-800 mt-10 mb-3">Membros</h3>
 
           <div className="flex flex-col gap-3">
@@ -64,9 +106,10 @@ export default function EditSection({ open, setOpen, membros }) {
             ))}
           </div>
 
-          {/* Botões */}
+          
           <div className="flex justify-end gap-4 mt-10">
             <button
+              onClick={onChangePhoto}
               className="
                 px-6 py-2 cursor-pointer rounded-xl border border-gray-700 
                 hover:bg-gray-200 transition font-medium
@@ -76,6 +119,7 @@ export default function EditSection({ open, setOpen, membros }) {
             </button>
 
             <button
+              onClick={handleSubmit}
               className="
                 px-6 py-3 cursor-pointer bg-gray-900 text-white rounded-xl 
                 font-semibold shadow-md hover:brightness-110 transition
@@ -83,6 +127,19 @@ export default function EditSection({ open, setOpen, membros }) {
             >
               Editar
             </button>
+
+
+            <button
+              onClick={() => setOpenAddMember(true)}
+              className="
+                mt-2 px-4 py-2 cursor-pointer rounded-xl bg-green-600 text-white 
+                font-semibold hover:brightness-110 transition
+              "
+            >
+              + Adicionar membro
+            </button>
+
+  
           </div>
         </div>
       )}
