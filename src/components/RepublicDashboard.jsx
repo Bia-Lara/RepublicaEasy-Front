@@ -90,8 +90,9 @@ export default function RepublicDashboard() {
 
   async function handleAddMember(email) {
     try {
-      const resp = await post(`/republica/${republicaId}/add-membro`, {
-        email
+      const resp = await post(`/republica/addUser`, {
+        email,
+        republicaId
       });
       
       const userAdded = resp.data; 
