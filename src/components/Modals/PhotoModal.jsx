@@ -3,10 +3,25 @@ import ModalBase from "./ModalBase";
 
 export default function PhotoModal({ open, onClose, onSave }) {
   const [url, setUrl] = useState("");
+  const [error, setError] = useState("");
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+
+    if (value.length > 255) {
+      setError("A URL deve ter no máximo 255 caracteres.");
+      return;
+    }
+
+    setError("");
+    setUrl(value);
+  };
 
   const handleSave = () => {
-    onSave(url); 
-    onClose();
+    if (!error) {
+      onSave(url);
+      onClose();
+    }
   };
 
   return (
@@ -17,21 +32,29 @@ export default function PhotoModal({ open, onClose, onSave }) {
 
       <div className="flex flex-col gap-4">
         <label className="text-gray-700 text-sm font-semibold">
-          URL da Foto
+          URL da Foto (máx 255 caracteres)
         </label>
 
         <input
           type="text"
           value={url}
-          onChange={(e) => setUrl(e.target.value)}
+          onChange={handleChange}
           placeholder="https://exemplo.com/imagem.jpg"
-          className="
+          maxLength={255}
+          className={`
             w-full border rounded-xl px-4 py-3 bg-gray-100 
-            focus:ring-2 focus:ring-green-500 outline-none
-          "
+            focus:ring-2 outline-none
+            ${error ? "border-red-500 focus:ring-red-400" : "focus:ring-green-500"}
+          `}
         />
 
-        {url && (
+        
+        {error && (
+          <p className="text-red-500 text-sm font-medium">{error}</p>
+        )}
+
+        
+        {url && !error && (
           <img
             src={url}
             alt="Preview"
@@ -42,11 +65,14 @@ export default function PhotoModal({ open, onClose, onSave }) {
 
       <button
         onClick={handleSave}
-        className="
-          mt-6 w-full py-3 rounded-xl 
-          bg-green-600 text-white font-semibold
-          hover:brightness-110 transition
-        "
+        disabled={error || !url}
+        className={`
+          mt-6 w-full py-3 rounded-xl font-semibold
+          transition
+          ${error || !url
+            ? "bg-gray-400 text-white cursor-not-allowed"
+            : "bg-green-600 text-white hover:brightness-110"}
+        `}
       >
         Salvar Foto
       </button>

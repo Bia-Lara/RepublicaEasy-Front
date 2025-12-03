@@ -1,27 +1,30 @@
 import { useState } from "react";
-import ProfilePhoto from "./ProfilePhoto";
 import ProfileField from "./ProfileField";
-import PhotoModal from "../Modals/PhotoModal";
+import ProfileFieldReadOnly from "./ProfileFieldReadOnly";
+import { put } from "../../services/ApiCLient";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function ProfileCard({ user }) {
+  const { updateUser } = useAuth();
+
   const [name, setName] = useState(user?.name);
-  const [email, setEmail] = useState(user?.email);
-  const [password, setPassword] = useState("************");
-  const [photo, setPhoto] = useState(user?.photo);
 
-  const [openPhotoModal, setOpenPhotoModal] = useState(false);
+  const handleSave = async () => {
+    try {
+      await put(`/user/${user.id}`, {
+        name: name,
+      });
 
-  const handleSave = () => {
-    console.log("Salvar perfil:", {
-      name,
-      email,
-      password,
-      photo,
-    });
-  };
+      updateUser({
+        ...user,
+        name,
+      });
 
-  const handlePhotoSave = (newUrl) => {
-    setPhoto(newUrl);
+      alert("Nome atualizado com sucesso!");
+    } catch (err) {
+      console.error("Erro ao atualizar nome:", err);
+      alert("Erro ao atualizar nome.");
+    }
   };
 
   return (
@@ -29,38 +32,63 @@ export default function ProfileCard({ user }) {
       className="
         bg-white/70 backdrop-blur-xl 
         border border-white/40 rounded-3xl shadow-xl 
-        p-10 flex flex-col gap-8
+        p-10 flex flex-col gap-10
       "
     >
-      <div className="flex flex-col md:flex-row gap-10 items-center">
+  
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
-        <div className="w-full flex flex-col gap-2">
+        
+        <div className="flex flex-col gap-2">
           <label className="text-sm text-gray-600 font-medium">Nome</label>
           <ProfileField value={name} onChange={setName} />
         </div>
+
+       
+        <div className="flex flex-col gap-2">
+          <label className="text-sm text-gray-600 font-medium">Email</label>
+          <ProfileFieldReadOnly value={user.email} />
+        </div>
+
+        
+        {user.localization && (
+          <>
+            <div className="flex flex-col gap-2">
+              <label className="text-sm text-gray-600 font-medium">Cidade</label>
+              <ProfileFieldReadOnly value={user.localization.city} />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className="text-sm text-gray-600 font-medium">Estado</label>
+              <ProfileFieldReadOnly value={user.localization.state} />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className="text-sm text-gray-600 font-medium">Rua</label>
+              <ProfileFieldReadOnly value={user.localization.street} />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className="text-sm text-gray-600 font-medium">Bairro</label>
+              <ProfileFieldReadOnly value={user.localization.neighborhood} />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className="text-sm text-gray-600 font-medium">Número</label>
+              <ProfileFieldReadOnly value={user.localization.number} />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className="text-sm text-gray-600 font-medium">CEP</label>
+              <ProfileFieldReadOnly value={user.localization.cep} />
+            </div>
+          </>
+        )}
+
       </div>
 
-      <div className="flex flex-col gap-2">
-        <label className="text-sm text-gray-600 font-medium">Email</label>
-        <ProfileField value={email} onChange={setEmail} />
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <label className="text-sm text-gray-600 font-medium">Senha</label>
-        <ProfileField value={password} onChange={setPassword} />
-      </div>
-
-      <div className="flex justify-end gap-6 mt-4">
-        <button
-          onClick={() => setOpenPhotoModal(true)}
-          className="
-            px-8 py-3 cursor-pointer rounded-xl border border-gray-800 
-            hover:bg-gray-200 transition font-semibold
-          "
-        >
-          Alterar foto
-        </button>
-
+  
+      <div className="flex justify-end">
         <button
           onClick={handleSave}
           className="
@@ -68,14 +96,9 @@ export default function ProfileCard({ user }) {
             font-semibold shadow-md hover:brightness-110 transition
           "
         >
-          Editar
+          Salvar
         </button>
       </div>
-      <PhotoModal
-        open={openPhotoModal}
-        onClose={() => setOpenPhotoModal(false)}
-        onSave={handlePhotoSave}
-      />
     </div>
   );
 }
