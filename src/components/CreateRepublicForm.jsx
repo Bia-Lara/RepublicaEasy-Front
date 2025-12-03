@@ -72,19 +72,20 @@ export default function CreateRepublicForm() {
       const resp = await post("/republica", body);
       const republicaCriada = resp.data.data;
 
-      await post("/republica/addUser", {
+      const respAdd = await post("/republica/addUser", {
         email: user.email,
         republicaId: republicaCriada.id,
       });
 
-      updateUser({
-        ...user,
-        republicaId: republicaCriada.id,
-      });
+      const updatedUser = respAdd.data.data;
 
-      navigate("/republica-user");
+      updateUser(updatedUser);
 
       showToast("República criada com sucesso!");
+
+      navigate("/republicaUser");
+
+      
     } catch (err) {
       console.error("Erro ao criar república:", err);
       showToast("Erro ao criar república");

@@ -4,6 +4,7 @@ import logo from "../../assets/images/logo.png";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
 import Tabs from "../../components/Tabs";
+import { useToast } from "../../components/Modals/Toast";
 
 export default function RegisterUser() {
   const [name, setName] = useState("");
@@ -15,6 +16,7 @@ export default function RegisterUser() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
   const REGISTER_URL = API_BASE + "/api/v1/auth/register";
@@ -54,6 +56,7 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
       const text = await res.text().catch(() => null);
 
       if (res.ok) {
+        showToast("Cadastro realizado com sucesso! Agora Faça o login.");
         navigate("/login");
       } else {
         setError(text || "Erro no cadastro. Verifique os dados.");

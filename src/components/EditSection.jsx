@@ -20,7 +20,7 @@ export default function EditSection({
       state: republica.localization?.state || "",
       street: republica.localization?.street || "",
       neighborhood: republica.localization?.neighborhood || "",
-      number: republica.localization?.number || "",
+      number: republica.localization?.number ?? "",
       cep: republica.localization?.cep || ""
     },
     contact: republica.contact,
