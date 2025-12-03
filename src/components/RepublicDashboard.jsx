@@ -144,10 +144,26 @@ async function handleAddMember(email) {
   }
 }
 
+async function handleRemoveMember(email) {
+    try {
+      await put(`/republica/removeUser`, {
+        email
+      });
+      setRepublica((prev) => ({
+        ...prev,
+        users: prev.users.filter((u) => u.email !== email)
+      } ));
+      alert("Membro removido com sucesso!");
+    } catch (err) {
+      console.error("Erro ao remover membro:", err);
+      alert("Erro ao remover membro.");
+    }
+  }
 
   const users = republica.users?.map((u) => ({
     id: u.id,
-    nome: u.name
+    nome: u.name,
+    email: u.email
   })) || [];
 
   return (
@@ -168,11 +184,12 @@ async function handleAddMember(email) {
       <EditSection
         open={true}
         setOpen={() => {}}
-        membros={users.map((u) => u.nome)}
+        membros={users}
         republica={republica}
         onSave={handleEditRepublic}
         onChangePhoto={() => setOpenPhotoModal(true)}
         setOpenAddMember={() => setOpenAddMember(true)}
+        onRemoveMember={handleRemoveMember}
       />
 
       <PhotoModal
