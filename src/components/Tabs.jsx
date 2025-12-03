@@ -1,16 +1,30 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function Tabs({ tabs }) {
-  const [selected, setSelected] = useState(tabs[0]);
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // Mapeamento das rotas por nome da aba
   const routeMap = {
     "Login": "/login",
     "Cadastro": "/cadastro",
     "República": "/cadastro-republica"
   };
+
+  
+  const detectTabFromRoute = () => {
+    const current = Object.entries(routeMap).find(
+      ([, route]) => route.toLowerCase() === location.pathname.toLowerCase()
+    );
+    return current ? current[0] : tabs[0]; 
+  };
+
+  const [selected, setSelected] = useState(detectTabFromRoute());
+
+  
+  useEffect(() => {
+    setSelected(detectTabFromRoute());
+  }, [location.pathname]);
 
   const handleClick = (tab) => {
     setSelected(tab);
