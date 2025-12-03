@@ -9,7 +9,8 @@ export default function EditSection({
   membros,
   onSave,
   onChangePhoto,
-  setOpenAddMember
+  setOpenAddMember,
+  onRemoveMember
 }) {
 
   const [form, setForm] = useState({
@@ -163,7 +164,7 @@ export default function EditSection({
           <h3 className="text-xl font-bold text-gray-800 mt-10 mb-3">Membros</h3>
 
           <div className="flex flex-col gap-3">
-            {membros.map((nome, index) => (
+            {membros.map((m, index) => (
               <div
                 key={index}
                 className="
@@ -171,8 +172,8 @@ export default function EditSection({
                   rounded-xl px-4 py-3 flex justify-between items-center
                 "
               >
-                {nome}
-                <XMarkIcon className="w-6 h-6 cursor-pointer text-gray-700" />
+                {m.nome}
+                <XMarkIcon className="w-6 h-6 cursor-pointer text-gray-700" onClick={() => onRemoveMember(m.email)} />
               </div>
             ))}
           </div>
