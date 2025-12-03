@@ -7,6 +7,7 @@ import TaskModalCreate from "./Modals/TaskModalCreate";
 import TaskModalEdit from "./Modals/TaskModalEdit";
 import PhotoModal from "./Modals/PhotoModal";
 import AddMemberModal from "./Modals/AddMemberModal";
+import { useToast } from "./Modals/Toast";
 
 export default function RepublicDashboard() {
   const { user } = useAuth();
@@ -20,6 +21,7 @@ export default function RepublicDashboard() {
   const [openPhotoModal, setOpenPhotoModal] = useState(false);
   const [newPhoto, setNewPhoto] = useState("");
   const [openAddMember, setOpenAddMember] = useState(false);
+  const { showToast } = useToast();
 
   
   function formatLocation(loc) {
@@ -91,7 +93,7 @@ export default function RepublicDashboard() {
         locationFormatted: formatLocation(resp.data.localization),
       });
 
-      alert("República atualizada!");
+      showToast("República atualizada!");
     } catch (err) {
       console.error("Erro ao editar república:", err);
     }
@@ -137,10 +139,10 @@ async function handleAddMember(email) {
       users: [...(prev.users || []), addedUser]
     }));
 
-    alert("Membro adicionado com sucesso!");
+    showToast("Membro adicionado com sucesso!");
   } catch (err) {
     console.error("Erro ao adicionar membro:", err);
-    alert("Erro ao adicionar membro. Verifique se o email está correto.");
+    showToast("Erro ao adicionar membro. Verifique se o email está correto.");
   }
 }
 

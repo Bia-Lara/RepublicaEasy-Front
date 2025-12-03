@@ -3,9 +3,11 @@ import ProfileField from "./ProfileField";
 import ProfileFieldReadOnly from "./ProfileFieldReadOnly";
 import { put } from "../../services/ApiCLient";
 import { useAuth } from "../../hooks/useAuth";
+import { useToast } from "../Modals/Toast";
 
 export default function ProfileCard({ user }) {
   const { updateUser } = useAuth();
+  const { showToast } = useToast();
 
   const [name, setName] = useState(user?.name);
 
@@ -20,10 +22,10 @@ export default function ProfileCard({ user }) {
         name,
       });
 
-      alert("Nome atualizado com sucesso!");
+      showToast("Nome atualizado com sucesso!");
     } catch (err) {
       console.error("Erro ao atualizar nome:", err);
-      alert("Erro ao atualizar nome.");
+      showToast("Erro ao atualizar nome.");
     }
   };
 

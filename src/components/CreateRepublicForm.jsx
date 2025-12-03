@@ -4,12 +4,14 @@ import PhotoModal from "./Modals/PhotoModal";
 import { post } from "../services/ApiCLient";
 import { useAuth } from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "./Modals/Toast";
 
 export default function CreateRepublicForm() {
   const [imagePreview, setImagePreview] = useState(null);
   const [openPhotoModal, setOpenPhotoModal] = useState(false);
   const { user, updateUser } = useAuth();
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const [form, setForm] = useState({
     nome: "",
@@ -82,10 +84,10 @@ export default function CreateRepublicForm() {
 
       navigate("/republica-user");
 
-      alert("República criada com sucesso!");
+      showToast("República criada com sucesso!");
     } catch (err) {
       console.error("Erro ao criar república:", err);
-      alert("Erro ao criar república");
+      showToast("Erro ao criar república");
     }
   }
 

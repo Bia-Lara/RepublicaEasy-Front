@@ -1,11 +1,13 @@
 import { useState } from "react";
 import ModalBase from "./ModalBase";
+import { useToast } from "./Toast";
 
 export default function AddMemberModal({ open, onClose, onSave }) {
   const [email, setEmail] = useState("");
+  const { showToast } = useToast();
 
   const handleSubmit = () => {
-    if (!email) return alert("Informe o email do membro!");
+    if (!email) return showToast("Informe o email do membro!");
     onSave(email);
     setEmail("");
     onClose();
