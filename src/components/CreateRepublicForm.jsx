@@ -42,37 +42,47 @@ export default function CreateRepublicForm() {
     setForm((prev) => ({ ...prev, [field]: v }));
   };
 
-
   async function handleSubmit(e) {
     e.preventDefault();
 
     try {
+      
+      const localization = {
+        city: form.cidade,
+        state: form.estado,
+        neighborhood: form.bairro,
+        street: form.rua,
+        number: Number(form.numero),
+        cep: form.cep.replace(/\D/g, ""),
+      };
+
       const body = {
         name: form.nome,
-        description: form.descricao,
-        localization: `${form.rua}, ${form.numero}, ${form.bairro}, ${form.cidade} - ${form.estado}, CEP ${form.cep}`,
-        imageUrl: imagePreview,
+        description: form.descricao || null,
+        localization,
+        imageUrl: imagePreview || null,
         limitSpot: Number(form.vagas),
-        contact: user.email
+        contact: user.email,
       };
+
+      console.log("📦 Enviando payload:", body);
 
       const resp = await post("/republica", body);
       const republicaCriada = resp.data.data;
 
       await post("/republica/addUser", {
         email: user.email,
-        republicaId: republicaCriada.id
+        republicaId: republicaCriada.id,
       });
 
       updateUser({
         ...user,
-        republicaId: republicaCriada.id
+        republicaId: republicaCriada.id,
       });
 
       navigate("/republica-user");
 
       alert("República criada com sucesso!");
-
     } catch (err) {
       console.error("Erro ao criar república:", err);
       alert("Erro ao criar república");
@@ -125,7 +135,6 @@ export default function CreateRepublicForm() {
           </div>
         </div>
 
-        {/* MODAL PARA INSERIR URL */}
         <PhotoModal
           open={openPhotoModal}
           onClose={() => setOpenPhotoModal(false)}
@@ -134,61 +143,14 @@ export default function CreateRepublicForm() {
 
         {/* FORM */}
         <form className="flex flex-col gap-5">
-          <Input
-            label="Nome da República"
-            placeholder="Ex: República Sol Nascente"
-            value={form.nome}
-            onChange={(e) => handleChange("nome", e.target.value)}
-          />
-
-          <Input
-            label="CEP"
-            placeholder="00000-000"
-            value={form.cep}
-            onChange={(e) => handleChange("cep", e.target.value)}
-          />
-
-          <Input
-            label="Rua"
-            placeholder="Nome da rua"
-            value={form.rua}
-            onChange={(e) => handleChange("rua", e.target.value)}
-          />
-
-          <Input
-            label="Bairro"
-            placeholder="Nome do bairro"
-            value={form.bairro}
-            onChange={(e) => handleChange("bairro", e.target.value)}
-          />
-
-          <Input
-            label="Número"
-            placeholder="123"
-            value={form.numero}
-            onChange={(e) => handleChange("numero", e.target.value)}
-          />
-
-          <Input
-            label="Cidade"
-            placeholder="Cidade"
-            value={form.cidade}
-            onChange={(e) => handleChange("cidade", e.target.value)}
-          />
-
-          <Input
-            label="Estado (UF)"
-            placeholder="SP"
-            value={form.estado}
-            onChange={(e) => handleChange("estado", e.target.value)}
-          />
-
-          <Input
-            label="Vagas"
-            placeholder="10"
-            value={form.vagas}
-            onChange={(e) => handleChange("vagas", e.target.value)}
-          />
+          <Input label="Nome da República" value={form.nome} onChange={(e) => handleChange("nome", e.target.value)} />
+          <Input label="CEP" value={form.cep} onChange={(e) => handleChange("cep", e.target.value)} />
+          <Input label="Rua" value={form.rua} onChange={(e) => handleChange("rua", e.target.value)} />
+          <Input label="Bairro" value={form.bairro} onChange={(e) => handleChange("bairro", e.target.value)} />
+          <Input label="Número" value={form.numero} onChange={(e) => handleChange("numero", e.target.value)} />
+          <Input label="Cidade" value={form.cidade} onChange={(e) => handleChange("cidade", e.target.value)} />
+          <Input label="Estado (UF)" value={form.estado} onChange={(e) => handleChange("estado", e.target.value)} />
+          <Input label="Vagas" value={form.vagas} onChange={(e) => handleChange("vagas", e.target.value)} />
 
           <div>
             <label className="block text-sm mb-1 font-medium text-gray-700">
@@ -208,14 +170,14 @@ export default function CreateRepublicForm() {
           </div>
 
           <button
-              onClick={handleSubmit}
-              className="
-                bg-gradient-to-r from-green-600 to-emerald-500
-                text-white font-semibold py-3 rounded-xl
-                mt-6 shadow-md hover:shadow-lg 
-                hover:brightness-110 transition-all duration-300
-              "
-            >
+            onClick={handleSubmit}
+            className="
+              bg-gradient-to-r from-green-600 to-emerald-500
+              text-white font-semibold py-3 rounded-xl
+              mt-6 shadow-md hover:shadow-lg 
+              hover:brightness-110 transition-all duration-300
+            "
+          >
             Cadastrar República
           </button>
         </form>

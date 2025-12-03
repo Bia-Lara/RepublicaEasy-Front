@@ -1,6 +1,16 @@
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 
 export default function RepublicDetailCard({ republica, navigate }) {
+
+  const loc = republica.localizacao || {};
+
+  const enderecoFormatado = `
+    ${loc.street || ""} ${loc.number || ""}, 
+    ${loc.neighborhood || ""}, 
+    ${loc.city || ""} - ${loc.state || ""}, 
+    CEP ${loc.cep || ""}
+  `.replace(/\s+,/g, ",").replace(/,\s+,/g, ",").trim();
+
   return (
     <div
       className="
@@ -27,7 +37,7 @@ export default function RepublicDetailCard({ republica, navigate }) {
       <div className="flex justify-between text-gray-800 font-medium mb-8">
         <p>
           <span className="font-semibold">Localização:</span>{" "}
-          {republica.localizacao}
+          {enderecoFormatado}
         </p>
 
         <p>

@@ -21,6 +21,21 @@ export default function RepublicDashboard() {
   const [newPhoto, setNewPhoto] = useState("");
   const [openAddMember, setOpenAddMember] = useState(false);
 
+  
+  function formatLocation(loc) {
+    if (!loc) return "Localização não informada";
+
+    return `
+      ${loc.street || ""} ${loc.number || ""}, 
+      ${loc.neighborhood || ""}, 
+      ${loc.city || ""} - ${loc.state || ""}, 
+      CEP ${loc.cep || ""}
+    `
+      .replace(/\s+/g, " ")
+      .replace(/,\s*,/g, ",")
+      .trim();
+  }
+
   // ============= Fetch inicial ======================
   useEffect(() => {
     if (!republicaId) return;
@@ -28,11 +43,16 @@ export default function RepublicDashboard() {
     const loadData = async () => {
       try {
         const repResp = await get(`/republica/${republicaId}`);
-        setRepublica(repResp.data);
 
-        const tasksResp = await get(`/republica/${republicaId}/tarefas/ativas`);
+        setRepublica({
+          ...repResp.data,
+          locationFormatted: formatLocation(repResp.data.localization),
+        });
+
+        const tasksResp = await get(
+          `/republica/${republicaId}/tarefas/ativas`
+        );
         setTarefas(tasksResp.data);
-
       } catch (err) {
         console.error("Erro ao buscar dados:", err);
       }
@@ -58,27 +78,41 @@ export default function RepublicDashboard() {
 
   async function handleEditRepublic(data) {
     try {
-      const resp = await put(`/republica/${republicaId}`, {
+      const updatedData = {
         ...republica,
         ...data,
-        imageUrl: newPhoto || republica.imageUrl
+        imageUrl: newPhoto || republica.imageUrl,
+      };
+
+      const resp = await put(`/republica/${republicaId}`, updatedData);
+
+      setRepublica({
+        ...resp.data,
+        locationFormatted: formatLocation(resp.data.localization),
       });
 
-      setRepublica(resp.data);
       alert("República atualizada!");
     } catch (err) {
       console.error("Erro ao editar república:", err);
     }
   }
 
- 
+
   async function handleEditTask(data) {
     try {
       const resp = await put(`/republica/tarefa/${data.id}`, data);
 
+      const updated = resp.data;
+
+      if (updated.finalizada) {
+        setTarefas((prev) => prev.filter((t) => t.id !== updated.id));
+        return;
+      }
+
       setTarefas((prev) =>
-        prev.map((t) => (t.id === data.id ? resp.data : t))
+        prev.map((t) => (t.id === updated.id ? updated : t))
       );
+
     } catch (err) {
       console.error("Erro ao editar tarefa:", err);
     }
@@ -87,27 +121,28 @@ export default function RepublicDashboard() {
   if (!republica) {
     return <div className="text-center mt-10">Carregando...</div>;
   }
+  
+async function handleAddMember(email) {
+  try {
+    const resp = await post(`/republica/addUser`, {
+      email,
+      republicaId
+    });
 
-  async function handleAddMember(email) {
-    try {
-      const resp = await post(`/republica/addUser`, {
-        email,
-        republicaId
-      });
-      
-      const userAdded = resp.data; 
-      setRepublica((prev) => ({
-        ...prev,
-        users: [...prev.users, userAdded]
-      }));
+   
+    const addedUser = resp.data.data;
 
-      alert("Membro adicionado com sucesso!");
+    setRepublica(prev => ({
+      ...prev,
+      users: [...(prev.users || []), addedUser]
+    }));
 
-    } catch (err) {
-      console.error("Erro ao adicionar membro:", err);
-      alert("Erro ao adicionar membro. Verifique se o email está correto.");
-    }
+    alert("Membro adicionado com sucesso!");
+  } catch (err) {
+    console.error("Erro ao adicionar membro:", err);
+    alert("Erro ao adicionar membro. Verifique se o email está correto.");
   }
+}
 
 
   const users = republica.users?.map((u) => ({
@@ -117,11 +152,9 @@ export default function RepublicDashboard() {
 
   return (
     <div className="animate-fadeIn w-full">
-
       <h1 className="text-4xl font-extrabold text-gray-800 mb-8">
         República <span className="text-green-700">{republica.name}</span>
       </h1>
-      
 
       <TaskList
         tarefas={tarefas}
@@ -139,7 +172,7 @@ export default function RepublicDashboard() {
         republica={republica}
         onSave={handleEditRepublic}
         onChangePhoto={() => setOpenPhotoModal(true)}
-        setOpenAddMember={() => setOpenAddMember(true)} 
+        setOpenAddMember={() => setOpenAddMember(true)}
       />
 
       <PhotoModal
@@ -172,7 +205,6 @@ export default function RepublicDashboard() {
         tarefa={selectedTask}
         onSave={handleEditTask}
       />
-
     </div>
   );
 }

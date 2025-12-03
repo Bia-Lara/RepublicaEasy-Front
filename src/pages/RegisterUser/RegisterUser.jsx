@@ -34,18 +34,13 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
       return;
     }
     if (password !== confirmPassword) {
-      setError("As senhas não conferem.");
-      return;
+      return setError("As senhas não conferem.");
     }
 
     const payload = {
       name,
       email,
-      password,
-      localization: {
-        city: city || null,
-        state: stateUf || null,
-      },
+      password
     };
 
     try {
@@ -102,49 +97,6 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
-            </div>
-          </div>
-
-          <div className="flex gap-3">
-            <div className="flex-1">
-              <Input label="Cidade" type="text" value={city} onChange={(e) => setCity(e.target.value)} />
-            </div>
-            <div style={{ width: 120 }}>
-              <label className="text-sm text-gray-700 block mb-1">Estado</label>
-              <select
-                value={stateUf}
-                onChange={(e) => setStateUf(e.target.value)}
-                className="w-full rounded-md border border-gray-200 p-2 bg-white"
-              >
-                <option value="">UF</option>
-                <option>AC</option>
-                <option>AL</option>
-                <option>AP</option>
-                <option>AM</option>
-                <option>BA</option>
-                <option>CE</option>
-                <option>DF</option>
-                <option>ES</option>
-                <option>GO</option>
-                <option>MA</option>
-                <option>MT</option>
-                <option>MS</option>
-                <option>MG</option>
-                <option>PA</option>
-                <option>PB</option>
-                <option>PR</option>
-                <option>PE</option>
-                <option>PI</option>
-                <option>RJ</option>
-                <option>RN</option>
-                <option>RS</option>
-                <option>RO</option>
-                <option>RR</option>
-                <option>SC</option>
-                <option>SP</option>
-                <option>SE</option>
-                <option>TO</option>
-              </select>
             </div>
           </div>
 

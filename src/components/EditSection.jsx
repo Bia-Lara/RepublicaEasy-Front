@@ -15,17 +15,34 @@ export default function EditSection({
   const [form, setForm] = useState({
     name: republica.name,
     description: republica.description,
-    localization: republica.localization,
+    localization: {
+      city: republica.localization?.city || "",
+      state: republica.localization?.state || "",
+      street: republica.localization?.street || "",
+      neighborhood: republica.localization?.neighborhood || "",
+      number: republica.localization?.number || "",
+      cep: republica.localization?.cep || ""
+    },
     contact: republica.contact,
     limitSpot: republica.limitSpot
   });
 
+  const handleLocInput = (field, value) => {
+    setForm(prev => ({
+      ...prev,
+      localization: {
+        ...prev.localization,
+        [field]: value
+      }
+    }));
+  };
+
   const handleInput = (field, value) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
+    setForm(prev => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = () => {
-    onSave(form); 
+    onSave(form);
   };
 
   return (
@@ -50,7 +67,8 @@ export default function EditSection({
 
       {open && (
         <div>
-         
+
+          {/* FOTO + NOME */}
           <div className="flex items-center gap-5 mt-6">
             <img
               src={republica.imageUrl || "https://via.placeholder.com/150"}
@@ -60,35 +78,88 @@ export default function EditSection({
             />
 
             <div className="flex items-center gap-3 text-xl font-semibold text-gray-800">
-              {republica.name}
+              {form.name}
               <PencilIcon className="w-5 text-gray-700 cursor-pointer" />
             </div>
           </div>
 
-         
-          <div className="mt-8 flex flex-col gap-4">
+          {/* CAMPOS */}
+          <div className="mt-8 flex flex-col gap-6">
+
+            {/* NOME */}
             <InputEditable
-              value={form.localization}
-              onChange={(v) => handleInput("localization", v)}
+              label="Nome"
+              value={form.name}
+              onChange={(v) => handleInput("name", v)}
             />
 
+            {/* DESCRIÇÃO */}
             <InputEditable
+              label="Descrição"
               value={form.description}
               onChange={(v) => handleInput("description", v)}
             />
 
+            {/* ENDEREÇO */}
+            <h3 className="text-lg font-semibold text-gray-700">Endereço</h3>
+
+            <div className="grid grid-cols-2 gap-4">
+
+              <InputEditable
+                label="Cidade"
+                value={form.localization.city}
+                onChange={(v) => handleLocInput("city", v)}
+              />
+
+              <InputEditable
+                label="Estado"
+                value={form.localization.state}
+                onChange={(v) => handleLocInput("state", v)}
+              />
+
+              <InputEditable
+                label="Rua"
+                value={form.localization.street}
+                onChange={(v) => handleLocInput("street", v)}
+              />
+
+              <InputEditable
+                label="Bairro"
+                value={form.localization.neighborhood}
+                onChange={(v) => handleLocInput("neighborhood", v)}
+              />
+
+              <InputEditable
+                label="Número"
+                value={form.localization.number}
+                onChange={(v) => handleLocInput("number", v)}
+              />
+
+              <InputEditable
+                label="CEP"
+                value={form.localization.cep}
+                onChange={(v) => handleLocInput("cep", v)}
+              />
+
+            </div>
+
+            {/* VAGAS */}
             <InputEditable
+              label="Limite de Vagas"
               value={form.limitSpot}
               onChange={(v) => handleInput("limitSpot", v)}
             />
 
+            {/* CONTATO */}
             <InputEditable
+              label="Contato"
               value={form.contact}
               onChange={(v) => handleInput("contact", v)}
             />
+
           </div>
 
-        
+          {/* MEMBROS */}
           <h3 className="text-xl font-bold text-gray-800 mt-10 mb-3">Membros</h3>
 
           <div className="flex flex-col gap-3">
@@ -106,8 +177,9 @@ export default function EditSection({
             ))}
           </div>
 
-          
+          {/* BOTÕES */}
           <div className="flex justify-end gap-4 mt-10">
+
             <button
               onClick={onChangePhoto}
               className="
@@ -128,18 +200,16 @@ export default function EditSection({
               Editar
             </button>
 
-
             <button
               onClick={() => setOpenAddMember(true)}
               className="
-                mt-2 px-4 py-2 cursor-pointer rounded-xl bg-green-600 text-white 
+                px-4 py-2 cursor-pointer rounded-xl bg-green-600 text-white 
                 font-semibold hover:brightness-110 transition
               "
             >
               + Adicionar membro
             </button>
 
-  
           </div>
         </div>
       )}

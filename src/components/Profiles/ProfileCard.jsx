@@ -33,7 +33,6 @@ export default function ProfileCard({ user }) {
       "
     >
       <div className="flex flex-col md:flex-row gap-10 items-center">
-        <ProfilePhoto src={photo} />
 
         <div className="w-full flex flex-col gap-2">
           <label className="text-sm text-gray-600 font-medium">Nome</label>
